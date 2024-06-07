@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: peer0-oyur
+  labels:
+    app: peer0-oyur
+spec:
+  selector:
+    name: peer0-oyur
+  type: ClusterIP
+  ports:
+    - name: grpc
+      port: 9055
+      protocol: TCP

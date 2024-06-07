@@ -1,0 +1,9 @@
+{
+	"network-configs": {
+		"${PROJECT_NAME}-network": {
+			"name": "${PROJECTNAME_ALL_UPPER} Network",
+			"profile": "./connection-profile/${PROJECT_NAME}-network.json"
+		}
+	},
+	"license": "Apache-2.0"
+}

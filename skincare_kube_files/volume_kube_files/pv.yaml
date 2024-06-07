@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: skincarepv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi 
+  accessModes:
+    - ReadWriteOnce 
+  volumeMode: Filesystem
+  nfs:
+    path: /mnt/nfs_skincare/
+    server: 35.170.251.28
+  

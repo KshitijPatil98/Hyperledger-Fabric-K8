@@ -1,0 +1,48 @@
+{
+	"name": "${PROJECT_NAME}_network",
+	"version": "1.0.0",
+	"client": {
+		"tlsEnable": true,
+		"adminCredential": {
+			"id": "exploreradmin",
+			"password": "exploreradminpw"
+		},
+		"enableAuthentication": true,
+		"organization": "${ORGNAME_FIRST_UPPER}MSP",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "300"
+				},
+				"orderer": "300"
+			}
+		}
+	},
+	"channels": {
+		"${CHANNELNAME}": {
+			"peers": {
+				"peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com": {}
+			}
+		}
+	},
+	"organizations": {
+		"${ORGNAME_FIRST_UPPER}MSP": {
+			"mspid": "${ORGNAME_FIRST_UPPER}MSP",
+			"adminPrivateKey": {
+				"path": "/tmp/crypto/peerOrganizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/users/Admin@${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/msp/keystore/${ADMIN_PRIVATEKEY_NAME}"
+			},
+			"peers": ["peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com"],
+			"signedCert": {
+				"path": "/tmp/crypto/peerOrganizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/users/Admin@${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/msp/signcerts/cert.pem"
+			}
+		}
+	},
+	"peers": {
+		"peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/peerOrganizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/peers/peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/tls/ca.crt"
+			},
+			"url": "grpcs://peer0.${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com:${PEER0LIS}"
+		}
+	}
+}

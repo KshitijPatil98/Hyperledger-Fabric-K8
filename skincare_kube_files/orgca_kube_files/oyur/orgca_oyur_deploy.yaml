@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orgca-oyur
+  namespace: skincare
+spec:
+  selector:
+    matchLabels:
+      app: orgca-oyur
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: orgca-oyur
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+             claimName: skincarepvc
+      containers:
+        - name: orgca-oyur
+          image: hyperledger/fabric-ca:1.5.7
+          imagePullPolicy: "IfNotPresent"
+          command:
+            [ "fabric-ca-server" ,"start", "-b" ,"orgcaadmin:orgcaadminpw", "-d" ]
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "250m"
+            limits:
+              memory: "400Mi"
+              cpu: "350m"
+          env:
+           - name: FABRIC_CA_HOME
+             value: /etc/hyperledger/fabric-ca-server
+           - name: FABRIC_CA_SERVER_CA_NAME
+             value: orgca-oyur
+           - name: FABRIC_CA_SERVER_TLS_ENABLED
+             value: "true"
+           - name: FABRIC_CA_SERVER_PORT
+             value: "8055"
+          volumeMounts:
+            - mountPath: /etc/hyperledger/fabric-ca-server
+              subPath: organizations/orgca_certs/oyur
+              name: data
+      

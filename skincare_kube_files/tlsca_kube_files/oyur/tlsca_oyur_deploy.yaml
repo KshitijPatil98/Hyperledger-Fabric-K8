@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tlsca-oyur
+  namespace: skincare
+spec:
+  selector:
+    matchLabels:
+      app: tlsca-oyur
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tlsca-oyur
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+             claimName: skincarepvc
+      containers:
+        - name: tlsca-oyur
+          image: hyperledger/fabric-ca:1.5.7
+          imagePullPolicy: "IfNotPresent"
+          command:
+            [ "fabric-ca-server" ,"start", "-b" ,"tlscaadmin:tlscaadminpw", "-d" ]
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "250m"
+            limits:
+              memory: "400Mi"
+              cpu: "350m"
+          env:
+           - name: FABRIC_CA_HOME
+             value: /etc/hyperledger/fabric-ca-server
+           - name: FABRIC_CA_SERVER_CA_NAME
+             value: tlsca-oyur
+           - name: FABRIC_CA_SERVER_TLS_ENABLED
+             value: "true"
+           - name: FABRIC_CA_SERVER_PORT
+             value: "7055"
+          volumeMounts:
+            - mountPath: /etc/hyperledger/fabric-ca-server
+              subPath: organizations/tlsca_certs/oyur
+              name: data
+      

@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderer1
+  namespace: skincare
+spec:
+  selector:
+    matchLabels:
+      name: orderer1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: orderer1
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: skincarepvc
+      containers:
+        - image: hyperledger/fabric-orderer:2.5.4
+          name: orderer
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: FABRIC_LOGGING_SPEC
+              value: INFO
+            - name: ORDERER_GENERAL_LISTENADDRESS
+              value: "0.0.0.0"
+            - name: ORDERER_GENERAL_LISTENPORT
+              value: "9057"
+            - name: ORDERER_GENERAL_LOCALMSPID
+              value: OrdererMSP
+            - name: ORDERER_GENERAL_LOCALMSPDIR
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/msp
+            - name: ORDERER_GENERAL_TLS_ENABLED
+              value: "true"
+            - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/server.key
+            - name: ORDERER_GENERAL_TLS_CERTIFICATE
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/server.crt
+            - name: ORDERER_GENERAL_TLS_ROOTCAS
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/ca.crt
+            - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/server.key
+            - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/server.crt
+            - name: ORDERER_GENERAL_CLUSTER_ROOTCAS
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/ca.crt
+            - name: ORDERER_GENERAL_BOOTSTRAPMETHOD
+              value: none
+            - name: ORDERER_CHANNELPARTICIPATION_ENABLED
+              value: "true"
+            - name: ORDERER_ADMIN_TLS_ENABLED
+              value: "true"
+            - name: ORDERER_ADMIN_TLS_CERTIFICATE
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/server.crt
+            - name: ORDERER_ADMIN_TLS_PRIVATEKEY
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/server.key
+            - name: ORDERER_ADMIN_TLS_ROOTCAS
+              value: /organizations/ordererOrganizations/orderer.skincare.com/orderers/orderer1.skincare.com/tls/ca.crt
+            - name: ORDERER_ADMIN_TLS_CLIENTAUTHREQUIRED
+              value: "true"
+            - name: ORDERER_ADMIN_TLS_CLIENTROOTCAS
+              value: /organizations/ordererOrganizations/orderer.skincare.com/users/Admin@orderer.skincare.com/tls/ca.crt
+            - name: ORDERER_ADMIN_LISTENADDRESS
+              value: "0.0.0.0:9047"
+            - name: ORDERER_OPERATIONS_LISTENADDRESS
+              value: "0.0.0.0:9447"
+            - name: ORDERER_METRICS_PROVIDER
+              value: prometheus
+          ports:
+            - containerPort: 9057
+            - containerPort: 9047
+          resources:
+            limits:
+              memory: "250Mi"
+              cpu: "250m"
+            requests:
+              memory: "200Mi"
+              cpu: "150m"
+          volumeMounts:
+            - name: data
+              mountPath: /organizations
+              subPath: organizations
+            - name: data
+              mountPath: /var/hyperledger/production/orderer
+              subPath: data_backup/orderer/orderer1

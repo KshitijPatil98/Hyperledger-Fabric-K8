@@ -1,0 +1,11 @@
+set -x
+
+
+#HERE WE ARE ONLY PROVIDING FACILITY TO ENTER OWNER NAME AND ORDERER NAME. WE DONT HAVE THE FACILITY TO GIVE OCHANNEL NAME ETC ON FLY. THIS IS BECAUSE ITS A ONE TIME THING AND YOU CAN DO IT LATER. IF YOU WANT TO CHANGE THOSE PARAMETERS GO TO THE RESPECTIVE FILES AND CHANGE THE HARCODED VALUES
+
+OWNERNAME=$1
+
+sudo chmod +x ${PWD}/skincare_channel_operations/owner/create_genesis_block.sh 
+bash ${PWD}/skincare_channel_operations/owner/create_genesis_block.sh ${OWNERNAME} 
+
+{ set +x; } 2>/dev/null

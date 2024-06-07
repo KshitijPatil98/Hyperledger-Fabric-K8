@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cli-lab
+  namespace: skincare
+spec:
+  selector:
+    matchLabels:
+      name: cli-lab
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: cli-lab
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: skincarepvc
+      containers:
+        - name: cli
+          tty: true
+          stdin: true
+          image: hyperledger/fabric-tools:2.5.4
+          env:
+            - name: FABRIC_CFG_PATH
+              value: /etc/hyperledger/peercfg
+            - name: FABRIC_LOGGING_SPEC
+              value: INFO
+            - name: GOPATH
+              value: /opt/gopath
+          workingDir: /
+          resources:
+            limits:
+              memory: "300Mi"
+              cpu: "300m"
+            requests:
+              memory: "200Mi"
+              cpu: "200m"
+          volumeMounts:
+            - mountPath: /data/organizations
+              name: data
+              subPath: organizations/
+            - mountPath: /etc/hyperledger/peercfg/core.yaml
+              name: data
+              subPath: config/core.yaml
+            - mountPath: /data/skincare_channel_files
+              name: data
+              subPath: skincare_channel_files/
+            - mountPath: /data/skincare_cc_files
+              name: data
+              subPath: skincare_cc_files/
+            - mountPath: /data/skincare_script_files
+              name: data
+              subPath: skincare_script_files/
+            - mountPath: /data/skincare_privatedata_files
+              name: data
+              subPath: skincare_privatedata_files/
+            - mountPath: /data/config
+              name: data
+              subPath: config/
+            - mountPath: /data/org_channel_op.sh
+              name: data
+              subPath: org_channel_op.sh
+            - mountPath: /data/org_chaincode_op.sh
+              name: data
+              subPath: org_chaincode_op.sh

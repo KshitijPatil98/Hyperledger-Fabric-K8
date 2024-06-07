@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orgca-lab
+  namespace: skincare
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 8054
+      port: 8054
+  selector:
+    app: orgca-lab

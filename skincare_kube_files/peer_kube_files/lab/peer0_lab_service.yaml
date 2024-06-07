@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: peer0-lab
+  labels:
+    app: peer0-lab
+  namespace: skincare  
+spec:
+  selector:
+    name: peer0-lab
+  type: ClusterIP
+  ports:
+    - name: grpc
+      port: 9054
+      protocol: TCP
+

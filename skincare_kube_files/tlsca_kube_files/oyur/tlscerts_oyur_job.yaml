@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-oyur-tlscerts
+  namespace: skincare
+spec:
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      name: create-oyur-tlscerts
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+             claimName: skincarepvc
+      containers:
+        - name: create-oyur-tlscerts
+          image: hyperledger/fabric-ca-tools:latest
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "300m"
+            limits:
+              memory: "500Mi"
+              cpu: "350m"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          command:
+            - /bin/sh
+            - -c
+            - cd /data; ./skincare_script_files/tlscerts_scripts/oyur/tlscerts_oyur.sh       
+      restartPolicy: Never
+      
+      
+      
+ 

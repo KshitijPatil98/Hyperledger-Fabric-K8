@@ -1,0 +1,49 @@
+{
+    "name": "skincare-HLF-NETWORK-${ORG}",
+    "version": "1.0.0",
+    "client": {
+        "organization": "${ORG}",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "${ORG}": {
+            "mspid": "${ORG}MSP",
+            "peers": [
+                "peer0.oyur.skincare.com"
+            ],
+            "certificateAuthorities": [
+                "orgca-oyur"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.oyur.skincare.com": {
+            "url": "peer0.oyur.skincare.com:${P0PORT}",
+            "tlsCACerts": {
+                "pem": "${PEERPEM}"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.oyur.skincare.com",
+                "hostnameOverride": "peer0.oyur.skincare.com"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "orgca-oyur": {
+            "url": "https://orgca-oyur:${CAPORT}",
+            "caName": "orgca-oyur",
+            "tlsCACerts": {
+                "pem": ["${CAPEM}"]
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

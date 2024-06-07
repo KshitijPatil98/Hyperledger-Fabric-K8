@@ -1,0 +1,14 @@
+NodeOUs:
+  Enable: true
+  ClientOUIdentifier:
+    Certificate: cacerts/orgca-oyur-8055-orgca-oyur.pem
+    OrganizationalUnitIdentifier: client
+  PeerOUIdentifier:
+    Certificate: cacerts/orgca-oyur-8055-orgca-oyur.pem
+    OrganizationalUnitIdentifier: peer
+  AdminOUIdentifier:
+    Certificate: cacerts/orgca-oyur-8055-orgca-oyur.pem
+    OrganizationalUnitIdentifier: admin
+  OrdererOUIdentifier:
+    Certificate: cacerts/orgca-oyur-8055-orgca-oyur.pem
+    OrganizationalUnitIdentifier: orderer

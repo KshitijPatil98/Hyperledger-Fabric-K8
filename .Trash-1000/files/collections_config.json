@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Oyur",
+    "policy": "OR('OyurMSP.member')",
+    "requiredPeerCount": 1,
+    "maxPeerCount": 2,
+    "blockToLive": 0,
+    "memberOnlyRead": false,
+    "memberOnlyWrite": true,
+    "endorsementPolicy": {
+      "signaturePolicy": "OR('OyurMSP.member')"
+    }
+  },
+  {
+    "name": "Lab",
+    "policy": "OR('LabMSP.member')",
+    "requiredPeerCount": 1,
+    "maxPeerCount": 2,
+    "blockToLive": 0,
+    "memberOnlyRead": false,
+    "memberOnlyWrite": true,
+    "endorsementPolicy": {
+      "signaturePolicy": "OR('LabMSP.member')"
+    }
+  }
+]

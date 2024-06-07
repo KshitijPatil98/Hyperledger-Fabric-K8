@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-orderer-tlscerts
+  namespace: skincare
+spec:
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      name: create-orderer-tlscerts
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+             claimName: skincarepvc
+      containers:
+        - name: create-orderer-tlscerts
+          image: hyperledger/fabric-ca-tools:latest
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "300m"
+            limits:
+              memory: "500Mi"
+              cpu: "350m"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          command:
+            - /bin/sh
+            - -c
+            - cd /data; ./skincare_script_files/tlscerts_scripts/orderer/tlscerts_orderer.sh       
+      restartPolicy: Never
+      
+      
+      
+ 

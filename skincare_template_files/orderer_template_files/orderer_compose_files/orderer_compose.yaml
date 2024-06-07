@@ -1,0 +1,149 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '3'
+
+volumes:
+  ${ORDERER0_NAME}.${PROJECT_NAME}.com:
+  ${ORDERER1_NAME}.${PROJECT_NAME}.com:
+  ${ORDERER2_NAME}.${PROJECT_NAME}.com:
+
+networks:
+  ${NETWORK_NAME}:    
+       name: ${NETWORK_NAME}
+    
+
+services:
+
+  ${ORDERER0_NAME}.${PROJECT_NAME}.com:
+    container_name: ${ORDERER0_NAME}.${PROJECT_NAME}.com
+    image: hyperledger/fabric-${ORGNAME_ALL_LOWER}:2.5.4
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=${ORDERER0_LISTEN}
+      - ORDERER_GENERAL_LOCALMSPID=${ORGNAME_FIRST_UPPER}MSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/${ORGNAME_ALL_LOWER}/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_TLS_ENABLED=true
+      - ORDERER_ADMIN_TLS_CERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_ADMIN_TLS_PRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_ADMIN_TLS_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_ADMIN_TLS_CLIENTAUTHREQUIRED=true
+      - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/users/Admin@${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/tls/ca.crt]
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:${ORDERER0_ADMIN}
+      - ORDERER_OPERATIONS_LISTENADDRESS=${ORDERER0_NAME}.${PROJECT_NAME}.com:${ORDERER0_ADMIN_OP}
+      - ORDERER_METRICS_PROVIDER=prometheus
+    working_dir: /root
+    command: ${ORGNAME_ALL_LOWER}
+    volumes:
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORGNAME_ALL_LOWER}s/${ORDERER0_NAME}.${PROJECT_NAME}.com/msp:/var/hyperledger/${ORGNAME_ALL_LOWER}/msp
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORGNAME_ALL_LOWER}s/${ORDERER0_NAME}.${PROJECT_NAME}.com/tls/:/var/hyperledger/${ORGNAME_ALL_LOWER}/tls
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/users/:/var/hyperledger/${ORGNAME_ALL_LOWER}/users
+        - ${ORDERER0_NAME}.${PROJECT_NAME}.com:/var/hyperledger/production/${ORGNAME_ALL_LOWER}
+    ports:
+      - ${ORDERER0_LISTEN}:${ORDERER0_LISTEN}
+      - ${ORDERER0_ADMIN}:${ORDERER0_ADMIN}
+      - ${ORDERER0_ADMIN_OP}:${ORDERER0_ADMIN_OP}
+    networks:
+      - ${NETWORK_NAME}
+      
+  ${ORDERER1_NAME}.${PROJECT_NAME}.com:
+    container_name: ${ORDERER1_NAME}.${PROJECT_NAME}.com
+    image: hyperledger/fabric-${ORGNAME_ALL_LOWER}:2.5.4
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=${ORDERER1_LISTEN}
+      - ORDERER_GENERAL_LOCALMSPID=${ORGNAME_FIRST_UPPER}MSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/${ORGNAME_ALL_LOWER}/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_TLS_ENABLED=true
+      - ORDERER_ADMIN_TLS_CERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_ADMIN_TLS_PRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_ADMIN_TLS_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_ADMIN_TLS_CLIENTAUTHREQUIRED=true
+      - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/users/Admin@${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/tls/ca.crt]
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:${ORDERER1_ADMIN}
+      - ORDERER_OPERATIONS_LISTENADDRESS=${ORDERER1_NAME}.${PROJECT_NAME}.com:${ORDERER1_ADMIN_OP}
+      - ORDERER_METRICS_PROVIDER=prometheus
+    working_dir: /root
+    command: ${ORGNAME_ALL_LOWER}
+    volumes:
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORGNAME_ALL_LOWER}s/${ORDERER1_NAME}.${PROJECT_NAME}.com/msp:/var/hyperledger/${ORGNAME_ALL_LOWER}/msp
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORGNAME_ALL_LOWER}s/${ORDERER1_NAME}.${PROJECT_NAME}.com/tls/:/var/hyperledger/${ORGNAME_ALL_LOWER}/tls
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/users/:/var/hyperledger/${ORGNAME_ALL_LOWER}/users
+        - ${ORDERER1_NAME}.${PROJECT_NAME}.com:/var/hyperledger/production/${ORGNAME_ALL_LOWER}
+    ports:
+      - ${ORDERER1_LISTEN}:${ORDERER1_LISTEN}
+      - ${ORDERER1_ADMIN}:${ORDERER1_ADMIN}
+      - ${ORDERER1_ADMIN_OP}:${ORDERER1_ADMIN_OP}
+    networks:
+      - ${NETWORK_NAME}
+    
+      
+  ${ORDERER2_NAME}.${PROJECT_NAME}.com:
+    container_name: ${ORDERER2_NAME}.${PROJECT_NAME}.com
+    image: hyperledger/fabric-${ORGNAME_ALL_LOWER}:2.5.4
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=${ORDERER2_LISTEN}
+      - ORDERER_GENERAL_LOCALMSPID=${ORGNAME_FIRST_UPPER}MSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/${ORGNAME_ALL_LOWER}/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_TLS_ENABLED=true
+      - ORDERER_ADMIN_TLS_CERTIFICATE=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.crt
+      - ORDERER_ADMIN_TLS_PRIVATEKEY=/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/server.key
+      - ORDERER_ADMIN_TLS_ROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/tls/ca.crt]
+      - ORDERER_ADMIN_TLS_CLIENTAUTHREQUIRED=true
+      - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/${ORGNAME_ALL_LOWER}/users/Admin@${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/tls/ca.crt]
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:${ORDERER2_ADMIN}
+      - ORDERER_OPERATIONS_LISTENADDRESS=${ORDERER2_NAME}.${PROJECT_NAME}.com:${ORDERER2_ADMIN_OP}
+      - ORDERER_METRICS_PROVIDER=prometheus
+    working_dir: /root
+    command: ${ORGNAME_ALL_LOWER}
+    volumes:
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORGNAME_ALL_LOWER}s/${ORDERER2_NAME}.${PROJECT_NAME}.com/msp:/var/hyperledger/${ORGNAME_ALL_LOWER}/msp
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/${ORGNAME_ALL_LOWER}s/${ORDERER2_NAME}.${PROJECT_NAME}.com/tls/:/var/hyperledger/${ORGNAME_ALL_LOWER}/tls
+        - ../../../organizations/${ORGNAME_ALL_LOWER}Organizations/${ORGNAME_ALL_LOWER}.${PROJECT_NAME}.com/users/:/var/hyperledger/${ORGNAME_ALL_LOWER}/users
+        - ${ORDERER2_NAME}.${PROJECT_NAME}.com:/var/hyperledger/production/${ORGNAME_ALL_LOWER}
+    ports:
+      - ${ORDERER2_LISTEN}:${ORDERER2_LISTEN}
+      - ${ORDERER2_ADMIN}:${ORDERER2_ADMIN}
+      - ${ORDERER2_ADMIN_OP}:${ORDERER2_ADMIN_OP}
+    networks:
+      - ${NETWORK_NAME}
+    

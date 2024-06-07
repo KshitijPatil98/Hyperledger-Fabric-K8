@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peer0-oyur
+  namespace: skincare
+spec:
+  selector:
+    matchLabels:
+      name: peer0-oyur
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: peer0-oyur
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: skincarepvc
+      containers:
+        - name: peer
+          image: hyperledger/fabric-peer:2.5.4
+          command: ["/bin/sh", "-c", "peer node start"]
+          env:
+            - name: FABRIC_CFG_PATH
+              value: /etc/hyperledger/peercfg
+            - name: FABRIC_LOGGING_SPEC
+              value: INFO
+            - name: CORE_PEER_TLS_ENABLED
+              value: "true"
+            - name: CORE_PEER_TLS_CERT_FILE
+              value: /peer0.oyur.skincare.com/tls/server.crt
+            - name: CORE_PEER_TLS_KEY_FILE
+              value: /peer0.oyur.skincare.com/tls/server.key
+            - name: CORE_PEER_TLS_ROOTCERT_FILE
+              value: /peer0.oyur.skincare.com/tls/ca.crt
+            - name: CORE_PEER_ID
+              value: peer0-oyur
+            - name: CORE_PEER_ADDRESS
+              value: peer0-oyur:9055
+            - name: CORE_PEER_LISTENADDRESS
+              value: 0.0.0.0:9055
+            - name: CORE_PEER_ADDRESSAUTODETECT
+              value: "true"
+            - name: CORE_PEER_GOSSIP_BOOTSTRAP
+              value: peer0-oyur:9055
+            - name: CORE_PEER_GOSSIP_EXTERNALENDPOINT
+              value: peer0-oyur:9055
+            - name: CORE_PEER_LOCALMSPID
+              value: OyurMSP
+            - name: CORE_PEER_MSPCONFIGPATH
+              value: /peer0.oyur.skincare.com/msp
+            - name: CORE_OPERATIONS_LISTENADDRESS
+              value: 0.0.0.0:9445
+            - name: CORE_METRICS_PROVIDER
+              value: prometheus
+            - name: CORE_LEDGER_STATE_STATEDATABASE
+              value: "CouchDB"
+            - name: CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS
+              value: "localhost:5984"
+            - name: CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME
+              value: admin
+            - name: CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+              value: adminpw
+          ports:
+            - containerPort: 9055
+          resources:
+            limits:
+              memory: "300Mi"
+              cpu: "300m"
+            requests:
+              memory: "200Mi"
+              cpu: "200m"
+          volumeMounts:
+            - mountPath: /peer0.oyur.skincare.com
+              name: data
+              subPath: organizations/peerOrganizations/oyur.skincare.com/peers/peer0.oyur.skincare.com
+            - mountPath: /var/hyperledger/production
+              name: data
+              subPath: data_backup/oyur/peer0
+            - mountPath: /etc/hyperledger/peercfg/core.yaml
+              name: data
+              subPath: config/core.yaml
+        - name: couchdb
+          image: couchdb:3.3.2
+          env:
+            - name: COUCHDB_USER
+              value: admin
+            - name: COUCHDB_PASSWORD
+              value: adminpw
+          resources:
+            limits:
+              memory: "300Mi"
+              cpu: "300m"
+            requests:
+              memory: "200Mi"
+              cpu: "200m"
+          volumeMounts:
+            - mountPath: /opt/couchdb/data
+              name: data
+              subPath: data_backup/oyur/peer0-couchdb

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tlsca-orderer
+  namespace: skincare
+spec:
+  type: ClusterIP
+  ports: 
+  - targetPort: 7056
+    port: 7056
+  selector:
+      app: tlsca-orderer
+  

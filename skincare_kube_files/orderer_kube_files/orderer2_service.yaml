@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: orderer2
+  labels:
+    app: orderer2
+spec:
+  selector:
+    name: orderer2
+  type: ClusterIP
+  ports:
+    - name: grpc
+      port: 9058
+      protocol: TCP
+    - name: admin
+      port: 9048
+      protocol: TCP
+
